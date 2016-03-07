@@ -4,8 +4,6 @@ set notitle
 set mouse=a
 set shell=zsh
 
-" ftplugin
-
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
@@ -14,51 +12,52 @@ set clipboard=unnamedplus
 set backspace=start,eol,indent
 set expandtab
 
+if &compatible
+  set nocompatible
+endif
+
+" dein
+" dir where plugins are installed
+
+let s:nvim_home = expand('~/.config/nvim/')
+let s:dein_dir = s:nvim_home . 'dein'
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  endif
+endif
+
+execute 'set runtimepath^=' . s:dein_repo_dir
+set runtimepath+=$GOROOT/misc/vim
+
+call dein#begin(s:dein_dir)
+
+call dein#add('Shougo/dein.vim')
+call dein#add('Shougo/vimproc.vim', {
+  \ 'build' : {
+  \   'mac' : 'make -f make_mac.mak',
+  \   'unix': 'gmake',
+  \   },
+  \ })
 
 
-"if has('nvim_starting')
-set runtimepath+=$HOME/.config/nvim/bundle/neobundle.vim/
-"endif
+" plugin list (toml)
+let s:toml      = s:nvim_home . 'rc/dein.toml'
+let s:lazy_toml = s:nvim_home . 'rc/dein_lazy.toml'
 
+if dein#load_cache([expand('<sfile>'), s:toml, s:lazy_toml])
+  call dein#load_toml(s:toml,      {'lazy': 0})
+  call dein#load_toml(s:lazy_toml, {'lazy': 1})
+  call dein#save_cache()
+endif
 
-call neobundle#begin(expand('~/.config/nvim/bundle/'))
+call dein#end()
 
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'scrooloose/syntastic'
-
-"NeoBundle 'Shougo/echodoc', '', 'default'
-
-" call neobundle#config('echodoc', {
-"      \ 'lazy' : 1,
-"      \ 'autoload' : {
-"      \ 'insert' : 1,
-"      \ }})
-"NeoBundle 'osyo-manga/vim-monster'
-"NeoBundle 'kchmck/vim-coffee-script'
-"NeoBundle 'fatih/vim-go'
-"NeoBundle 'derekwyatt/vim-scala'
-"NeoBundle 'vim-scripts/javacomplete'
-
-NeoBundle 'Shougo/vimproc', {
-     \ 'build' : {
-     \     'mac' : 'make -f make_mac.mak',
-     \     'unix' : 'make -f make_unix.mak',
-     \    },
-     \ }
-
-" rubyにてendを自動挿入
-NeoBundle 'tpope/vim-endwise'
-
-"コメントon/offを手軽に実行(visualモード shiftで選択 -> ctrl+_を2回)
-NeoBundle 'tomtom/tcomment_vim'
-
-NeoBundle 'Shougo/deoplete.nvim'
-
-call neobundle#end()
-
-NeoBundleCheck
+if dein#check_install()
+  call dein#install()
+endif
 
 
 

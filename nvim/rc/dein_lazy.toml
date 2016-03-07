@@ -1,0 +1,4 @@
+#[[plugins]]
+#repo = 'marcus/rsense'
+#on_ft = 'ruby'
+

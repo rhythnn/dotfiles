@@ -3,7 +3,6 @@ set notitle
 set mouse=a
 set shell=zsh
 set ambiwidth=double
-" ftplugin
 
 set tabstop=2
 set softtabstop=2
@@ -12,28 +11,33 @@ set autoindent
 set clipboard=unnamed,autoselect
 set backspace=start,eol,indent
 set expandtab
+set number
+set nowritebackup
+set nobackup
+set noswapfile
 
-" dir where plugins are installed
 if &compatible
   set nocompatible
 endif
 
+" dir where plugins are installed
 let s:dein_dir = expand('~/.vim/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
-"if &runtimepath !~# '/dein.vim'
-"  if !isdirectory(s:dein_repo_dir)
-"    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-"  endif
-set runtimepath^=~/.cache/dein/repos/github.com/Shougo/dein.vim
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  endif
+endif
+
+set runtimepath^=~/.vim/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=$GOROOT/misc/vim
 
 
-"endif
 
-"set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
-"set runtimepath+=$GOROOT/misc/vim
+" dein
 
-call dein#begin(expand('~/.cache/dein'))
+call dein#begin(s:dein_dir)
 
 call dein#add('Shougo/dein.vim')
 call dein#add('Shougo/vimproc.vim', {
@@ -105,7 +109,6 @@ if !exists('g:neocomplete#force_omni_input_patterns')
 	let g:neocomplete#force_omni_input_patterns = {}
 endif
 
-" 正直 '.' だけで良い
 let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplete#force_omni_input_patterns.python = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplete#force_omni_input_patterns.go = '[^. *\t]\.\w*\|\h\w*::'
@@ -119,8 +122,6 @@ autocmd QuickFixCmdPost * nested cwindow | redraw!
 " jedi.vim
 autocmd FileType python setlocal omnifunc=jedi#completions
 autocmd FileType python setlocal completeopt-=preview
-"autocmd FileType python setl autoindent smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
-"autocmd FileType python setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
 
 autocmd FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
@@ -130,16 +131,7 @@ autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 sm
 
 autocmd Filetype coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent
 
-"autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
-
-"filetype plugin indent on
-
-"colorscheme flattened_light
 syntax enable
 set background=dark
 colorscheme PaperColor
-set number
 
-set nowritebackup
-set nobackup
-set noswapfile
